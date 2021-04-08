@@ -2,7 +2,7 @@
 
 Flutter effects widget: cut widgets in NxM tiles and animate them.
 
-![Alt text](https://github.org/alnitak/blob/master/img/yoda.gif?raw=true "yoda Demo")
+![Screenshot](https://github.com/alnitak/yoda/blob/master/img/yoda.gif?raw=true "yoda Demo")
 
 ## Yoda Widget Properties
 
