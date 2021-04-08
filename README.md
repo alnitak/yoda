@@ -1,6 +1,7 @@
-# yoda
+# Yoda Flutter plugin
 
 Flutter effects widget: cut widgets in NxM tiles and animate them.
+Works on all platforms.
 
 ![Screenshot](https://github.com/alnitak/yoda/blob/master/img/yoda.gif?raw=true "yoda Demo")
 
@@ -38,7 +39,7 @@ Flutter effects widget: cut widgets in NxM tiles and animate them.
 
 If you need to control the animation status:
 ```dart
-  YodaController _yodaControllerExplode;
+YodaController _yodaControllerExplode;
   
 @override
   void initState() {
