@@ -15,8 +15,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late YodaController _yodaControllerExplode;
-  late YodaController _yodaControllerCard;
   late YodaController _yodaControllerVortex;
+  late YodaController _yodaControllerFlocks;
   @override
   void initState() {
     super.initState();
@@ -32,14 +32,13 @@ class _MyAppState extends State<MyApp> {
         _yodaControllerVortex.reset();
       }
     });
-    _yodaControllerCard = YodaController()
+    _yodaControllerFlocks = YodaController()
     ..addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        _yodaControllerCard.reset();
+        _yodaControllerFlocks.reset();
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -62,74 +61,60 @@ class _MyAppState extends State<MyApp> {
                   animParameters: AnimParameters(
                     yodaBarrier: YodaBarrier(bottom: true, left: true, right: true),
                     fractionalCenter: Offset(0.5, 1.0),
-                    hTiles: 12,
-                    vTiles: 12,
+                    hTiles: 20,
+                    vTiles: 20,
                     power: 0.3,
                     gravity: 1.0
                   ),
                   startWhenTapped: true,
                   child: SizedBox(
-                    width: 300,
-                    height: 200,
-                    child: Image.asset('assets/forest.jpg', fit: BoxFit.fill)
-                    // child: Container(color: Colors.green)
+                    width: 250,
+                    height: 180,
+                    child: Image.asset('assets/dash.png', fit: BoxFit.fill)
                   )
               ),
 
-              SizedBox(height: 20),
-
-              Yoda(
-                  yodaEffect: YodaEffect.Explosion,
-                  controller: _yodaControllerCard,
-                  duration: Duration(milliseconds: 2500),
-                  animParameters: AnimParameters(
-                      yodaBarrier: YodaBarrier(top: true, bottom: true, left: true, right: true),
-                      fractionalCenter: Offset(0.5, 0.5),
-                      hTiles: 40,
-                      vTiles: 20,
-                      power: 0.1,
-                      gravity: 0
-                  ),
-                  startWhenTapped: true,
-                  child: SizedBox(
-                    height: 100,
-                    child: Card(
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Image.asset('assets/dash.png', fit: BoxFit.fill, height: 60),
-                              Image.asset('assets/forest.jpg', fit: BoxFit.fill, height: 60)
-                            ],
-                          ),
-                          Text('YODA example'),
-                        ],
-                      ),
-                    ),
-                  )
-              ),
-
-              SizedBox(height: 20),
+              SizedBox(height: 12),
 
               Yoda(
                   yodaEffect: YodaEffect.Vortex,
                   controller: _yodaControllerVortex,
                   duration: Duration(milliseconds: 2500),
                   animParameters: AnimParameters(
-                    yodaBarrier: YodaBarrier(top: true, bottom: true, left: true, right: true),
-                    fractionalCenter: Offset(0.5, 1.0),
-                    hTiles: 20,
-                    vTiles: 20,
-                    power: 10,
-                    gravity: 0
+                      yodaBarrier: YodaBarrier(top: true, bottom: true, left: true, right: true),
+                      fractionalCenter: Offset(0.5, 1.0),
+                      hTiles: 20,
+                      vTiles: 20,
+                      power: 10,
+                      gravity: 0
                   ),
                   startWhenTapped: true,
                   child: SizedBox(
-                    width: 300,
-                    height: 200,
-                    child: Image.asset('assets/dash.png', fit: BoxFit.fill)
-                    // child: Container(color: Colors.green)
+                      width: 250,
+                      height: 180,
+                      child: Image.asset('assets/dash2.png', fit: BoxFit.fill)
+                  )
+              ),
+
+              SizedBox(height: 12),
+
+              Yoda(
+                  yodaEffect: YodaEffect.Flakes,
+                  controller: _yodaControllerFlocks,
+                  duration: Duration(milliseconds: 2500),
+                  animParameters: AnimParameters(
+                    yodaBarrier: YodaBarrier(),
+                    // fractionalCenter: Offset(0.5, 1.0), // not used in the Flocks effect
+                    hTiles: 20,
+                    vTiles: 20,
+                    power: 10,
+                    gravity: 30
+                  ),
+                  startWhenTapped: true,
+                  child: SizedBox(
+                    width: 250,
+                    height: 180,
+                    child: Image.asset('assets/dash3.png', fit: BoxFit.fill)
                   )
               ),
 
@@ -140,8 +125,8 @@ class _MyAppState extends State<MyApp> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             _yodaControllerExplode.start();
-            _yodaControllerCard.start();
             _yodaControllerVortex.start();
+            _yodaControllerFlocks.start();
           },
           child: Icon(Icons.add),
         ), // This trailing comma makes auto-formatting nicer for build methods.

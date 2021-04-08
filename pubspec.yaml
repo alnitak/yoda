@@ -1,8 +1,8 @@
 name: yoda
-description: Yoda Flutter plugin.
-version: 0.0.1
-author:
-homepage:
+description: Effects widget, cut widgets in NxM tiles and animate them.
+version: 0.0.1-dev.1
+homepage: https://github.com/alnitak/yoda
+issue_tracker: https://github.com/alnitak/yoda/issues
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

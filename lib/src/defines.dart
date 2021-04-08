@@ -10,6 +10,7 @@ import 'package:flutter/painting.dart';
 enum YodaEffect {
   Explosion,
   Vortex,
+  Flakes,
 }
 
 /// Tiles barriers
@@ -63,7 +64,6 @@ class AnimParameters {
   });
 }
 
-
 class AnimObject {
   // Animation parameters (see above)
   AnimParameters animParameters = AnimParameters();
@@ -94,9 +94,7 @@ class AnimObject {
   List<ui.Image> tileUiImages = [];
 }
 
-
 class CapturedWidged {
-  ByteData? byteData;   // uncompressed 32bit RGBA image data
+  ByteData? byteData; // uncompressed 32bit RGBA image data
   late Size size;
 }
-
