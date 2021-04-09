@@ -1,6 +1,6 @@
 # Yoda Flutter plugin
 
-Flutter effects widget: cut widgets in NxM tiles and animate them.
+Flutter widget that let you slice any kind of child widget in a matrix of tiles and animate them with different kind of ways. Currently with Explode, Vortex and Flakes.
 Works on all platforms.
 
 ![Screenshot](https://github.com/alnitak/yoda/blob/master/img/yoda.gif?raw=true "yoda Demo")

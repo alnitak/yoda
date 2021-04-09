@@ -59,8 +59,8 @@ class Yoda extends StatefulWidget {
   // widget to slice
   final Widget child;
 
-  // Aniomation parameters
-  AnimParameters? animParameters;
+  // Animation parameters
+  final AnimParameters? animParameters;
 
   // Enable the animation by tapping the child widget and use
   // the tapping position as the center of the force
@@ -97,7 +97,7 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
   int catched = 0;
   CapturedWidged captured = CapturedWidged();
   AnimObject animObject = AnimObject();
-  final int RGBA32HeaderSize = 122;
+  final int rgba32HeaderSize = 122;
 
   _YodaState(this._yodaController) {
     if (_yodaController != null) _yodaController?._addState(this);
@@ -327,11 +327,11 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
     int bytes = 4;
     Uint8List header = bmpHeader(x2 - x1, y2 - y1);
     Uint8List tile =
-        Uint8List(RGBA32HeaderSize + (x2 - x1) * bytes * (y2 - y1) * bytes);
+        Uint8List(rgba32HeaderSize + (x2 - x1) * bytes * (y2 - y1) * bytes);
     ByteData data =
-        ByteData(RGBA32HeaderSize + (x2 - x1) * bytes * (y2 - y1) * bytes);
+        ByteData(rgba32HeaderSize + (x2 - x1) * bytes * (y2 - y1) * bytes);
     int i = 0;
-    for (i = 0; i < RGBA32HeaderSize; i++) {
+    for (i = 0; i < rgba32HeaderSize; i++) {
       tile[i] = header[i];
       data.setInt8(i, header[i]);
     }
@@ -368,13 +368,13 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
 
   Uint8List bmpHeader(int width, int height) {
     int contentSize = width * height;
-    Uint8List ret = Uint8List(RGBA32HeaderSize);
+    Uint8List ret = Uint8List(rgba32HeaderSize);
 
     final ByteData bd = ret.buffer.asByteData();
     bd.setUint8(0x0, 0x42);
     bd.setUint8(0x1, 0x4d);
-    bd.setInt32(0x2, contentSize + RGBA32HeaderSize, Endian.little);
-    bd.setInt32(0xa, RGBA32HeaderSize, Endian.little);
+    bd.setInt32(0x2, contentSize + rgba32HeaderSize, Endian.little);
+    bd.setInt32(0xa, rgba32HeaderSize, Endian.little);
     bd.setUint32(0xe, 108, Endian.little);
     bd.setUint32(0x12, width, Endian.little);
     bd.setUint32(0x16, -height, Endian.little);
