@@ -26,6 +26,12 @@ class YodaExplode extends CustomPainter {
     for (int i = 0; i < animObject.tileUiImages.length; i++) {
       double newDistance = animObject.distance[i] *
           (animObject.velocity[i] * velocityCurve.transform(controllerValue));
+
+      // randomize the new distance
+      if (animObject.animParameters.randomness > 0)
+        newDistance +=
+            (Random(i).nextDouble() * animObject.animParameters.randomness );
+
       double dy = (controllerValue) *
           animObject.distance[i] *
           animObject.animParameters.gravity;
@@ -47,6 +53,13 @@ class YodaExplode extends CustomPainter {
       // opacity
       paint.color =
           Color.fromRGBO(0, 0, 0, 1 - opacityCurve.transform(controllerValue));
+
+      // blur
+      if (animObject.animParameters.blurPower > 0)
+        paint.maskFilter = MaskFilter.blur(
+            BlurStyle.normal,
+            (velocityCurve.transform(controllerValue)) *
+                animObject.animParameters.blurPower);
 
       canvas.drawImage(
           animObject.tileUiImages[i],

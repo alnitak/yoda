@@ -29,13 +29,14 @@ class YodaFlakes extends CustomPainter {
 
         double newX = animObject.offset[tileID].dx +
             sin(velocityCurve.transform(1 - controllerValue) *
-                    animObject.animParameters.power) *
+                    animObject.animParameters.effectPower) *
                 y;
+
         double newY = animObject.offset[tileID].dy +
             y *
                 velocityCurve.transform(controllerValue) *
-                Random(tileID)
-                    .nextInt(animObject.animParameters.gravity.floor());
+                Random(tileID).nextDouble() *
+                animObject.animParameters.randomness;
 
         if (animObject.animParameters.yodaBarrier.right && newX > size.width)
           newX = size.width;
@@ -49,6 +50,13 @@ class YodaFlakes extends CustomPainter {
         // opacity
         paint.color = Color.fromRGBO(
             0, 0, 0, 1 - opacityCurve.transformInternal(controllerValue));
+
+        // blur
+        if (animObject.animParameters.blurPower > 0)
+          paint.maskFilter = MaskFilter.blur(
+              BlurStyle.normal,
+              (velocityCurve.transform(controllerValue)) *
+                  animObject.animParameters.blurPower);
 
         canvas.drawImage(
             animObject.tileUiImages[tileID],

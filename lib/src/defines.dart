@@ -52,7 +52,13 @@ class AnimParameters {
   double gravity;
 
   // strength of the effect
-  double power;
+  double effectPower;
+
+  // strength of the blur
+  double blurPower;
+
+  // shifting randomness
+  int randomness;
 
   AnimParameters({
     this.yodaBarrier: const YodaBarrier(),
@@ -60,7 +66,9 @@ class AnimParameters {
     this.vTiles: 0,
     this.fractionalCenter: const Offset(0.5, 0.5),
     this.gravity: 9.81,
-    this.power: 1.0,
+    this.effectPower: 1.0,
+    this.blurPower: 0.0,
+    this.randomness: 0
   });
 }
 

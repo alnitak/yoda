@@ -26,7 +26,9 @@ Works on all platforms.
 * [**vTiles**] Number of vertical tiles to divide the child widget.
 * [**fractionalCenter**] Default center where force is given when not tapping on it.
 * [**gravity**] Vertical force.
-* [**power**] Strength of the effect.
+* [**effectPower**] Effect strength.
+* [**blurPower**] Blur strength.
+* [**randomness**] Random strength.
 
 ##### YodaBarrier properties
 * [**left**] Block tiles moving over the left edge.
@@ -65,8 +67,10 @@ Yoda(
     fractionalCenter: Offset(0.5, 1.0),
     hTiles: 20,
     vTiles: 20,
-    power: 0.3,
-    gravity: 1.0
+    effectPower: 0.2,
+    blurPower: 5,
+    gravity: 0.1,
+    randomness: 30,
   ),
   startWhenTapped: true,
   child: SizedBox(

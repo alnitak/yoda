@@ -15,7 +15,7 @@ import 'package:yoda/src/yoda_explode.dart';
 import 'package:yoda/src/yoda_flakes.dart';
 import 'package:yoda/src/yoda_vortex.dart';
 
-typedef YodaStatusListener = void Function(AnimationStatus status);
+typedef YodaStatusListener = void Function(AnimationStatus status, BuildContext context);
 
 class YodaController {
   _YodaState? _yodaState;
@@ -44,6 +44,11 @@ class YodaController {
     assert(isAttached, "YodaController must be attached to a Yoda widget");
     _yodaState?.reset();
   }
+
+  Key? getKey() {
+    assert(isAttached, "YodaController must be attached to a Yoda widget");
+    return _yodaState?.getKey();
+  }
 }
 
 class Yoda extends StatefulWidget {
@@ -67,20 +72,21 @@ class Yoda extends StatefulWidget {
   final bool startWhenTapped;
 
   Yoda({
-    Key? key,
     required this.yodaEffect,
     this.controller,
     this.duration: const Duration(milliseconds: 1000),
     required this.child,
     this.animParameters,
     this.startWhenTapped: false,
-  }) : super(key: key) {
-    print(yodaEffect);
+  }) : super(key: UniqueKey()) {
     assert(
         !(yodaEffect == YodaEffect.Flakes &&
             animParameters != null &&
             animParameters!.gravity <= 0),
         "Please, provide a gravity > 0 with Flocks effect");
+    assert(animParameters != null &&
+        animParameters!.blurPower >= 0,
+        "blurPower must be >= 0");
   }
 
   @override
@@ -116,7 +122,7 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
     _statusListener = (AnimationStatus status) {
       if (_yodaController != null &&
           _yodaController!._yodaStatusListener != null) {
-        _yodaController!._yodaStatusListener!(status);
+        _yodaController!._yodaStatusListener!(status, context);
       }
     };
     _listener = () {
@@ -220,6 +226,10 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
     controller.reset();
   }
 
+  Key? getKey() {
+    return widget.key;
+  }
+
   // TODO: find a better way to capture the widget
   Future<bool> _captureWidget(GlobalKey widgetKey) async {
     ui.Image? image;
@@ -283,7 +293,7 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
     // based on maxDistance, calculate the velocity.
     // 0..1   0 at max distance, 1 near the center
     for (int i = 0; i < animObject.tileUiImages.length; i++) {
-      animObject.velocity.add(animObject.animParameters.power /
+      animObject.velocity.add(animObject.animParameters.effectPower /
           (animObject.distance[i] / animObject.maxDistance));
     }
   }
