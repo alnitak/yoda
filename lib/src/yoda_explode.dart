@@ -30,7 +30,7 @@ class YodaExplode extends CustomPainter {
       // randomize the new distance
       if (animObject.animParameters.randomness > 0)
         newDistance +=
-            (Random(i).nextDouble() * animObject.animParameters.randomness );
+            (Random(i).nextDouble() * animObject.animParameters.randomness);
 
       double dy = (controllerValue) *
           animObject.distance[i] *

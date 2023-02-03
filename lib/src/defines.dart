@@ -60,16 +60,15 @@ class AnimParameters {
   // shifting randomness
   int randomness;
 
-  AnimParameters({
-    this.yodaBarrier: const YodaBarrier(),
-    this.hTiles: 0,
-    this.vTiles: 0,
-    this.fractionalCenter: const Offset(0.5, 0.5),
-    this.gravity: 9.81,
-    this.effectPower: 1.0,
-    this.blurPower: 0.0,
-    this.randomness: 0
-  });
+  AnimParameters(
+      {this.yodaBarrier: const YodaBarrier(),
+      this.hTiles: 0,
+      this.vTiles: 0,
+      this.fractionalCenter: const Offset(0.5, 0.5),
+      this.gravity: 9.81,
+      this.effectPower: 1.0,
+      this.blurPower: 0.0,
+      this.randomness: 0});
 }
 
 class AnimObject {

@@ -15,7 +15,8 @@ import 'package:yoda/src/yoda_explode.dart';
 import 'package:yoda/src/yoda_flakes.dart';
 import 'package:yoda/src/yoda_vortex.dart';
 
-typedef YodaStatusListener = void Function(AnimationStatus status, BuildContext context);
+typedef YodaStatusListener = void Function(
+    AnimationStatus status, BuildContext context);
 
 class YodaController {
   _YodaState? _yodaState;
@@ -84,8 +85,7 @@ class Yoda extends StatefulWidget {
             animParameters != null &&
             animParameters!.gravity <= 0),
         "Please, provide a gravity > 0 with Flocks effect");
-    assert(animParameters != null &&
-        animParameters!.blurPower >= 0,
+    assert(animParameters != null && animParameters!.blurPower >= 0,
         "blurPower must be >= 0");
   }
 

@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:yoda/yoda.dart';
 
 void main() {
@@ -14,17 +11,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       home: YodaExample(),
     );
   }
-
 }
-
 
 class YodaExample extends StatefulWidget {
   @override
@@ -76,9 +69,9 @@ class _YodaExampleState extends State<YodaExample> {
           ..addStatusListener((status, context) {
             if (status == AnimationStatus.completed) {
               items.removeWhere((element) {
-                bool isEqual = element.controller!.getKey() == context.widget.key;
-                if (isEqual)
-                  setState(() {});
+                bool isEqual =
+                    element.controller!.getKey() == context.widget.key;
+                if (isEqual) setState(() {});
                 return isEqual;
               });
             }
@@ -92,12 +85,9 @@ class _YodaExampleState extends State<YodaExample> {
             effectPower: 0.2,
             gravity: 0.1,
             blurPower: 5,
-            randomness: 30
-        ),
+            randomness: 30),
         startWhenTapped: true,
-        child: YodaCard(
-            assetName: 'assets/dash.png'
-        ),
+        child: YodaCard(assetName: 'assets/dash.png'),
       ),
     );
 
@@ -108,29 +98,26 @@ class _YodaExampleState extends State<YodaExample> {
             ..addStatusListener((status, context) {
               if (status == AnimationStatus.completed) {
                 items.removeWhere((element) {
-                  bool isEqual = element.controller!.getKey() == context.widget.key;
-                  if (isEqual)
-                    setState(() {});
+                  bool isEqual =
+                      element.controller!.getKey() == context.widget.key;
+                  if (isEqual) setState(() {});
                   return isEqual;
                 });
               }
             }),
           duration: Duration(milliseconds: 2500),
           animParameters: AnimParameters(
-              yodaBarrier: YodaBarrier(top: true, bottom: true, left: true, right: true),
+              yodaBarrier:
+                  YodaBarrier(top: true, bottom: true, left: true, right: true),
               fractionalCenter: Offset(0.5, 1.0),
               hTiles: 20,
               vTiles: 20,
               effectPower: 10,
               gravity: 0,
               blurPower: 5,
-              randomness: 20
-          ),
+              randomness: 20),
           startWhenTapped: true,
-          child: YodaCard(
-              assetName: 'assets/dash2.png'
-          )
-      ),
+          child: YodaCard(assetName: 'assets/dash2.png')),
     );
 
     items.add(
@@ -140,9 +127,9 @@ class _YodaExampleState extends State<YodaExample> {
             ..addStatusListener((status, context) {
               if (status == AnimationStatus.completed) {
                 items.removeWhere((element) {
-                  bool isEqual = element.controller!.getKey() == context.widget.key;
-                  if (isEqual)
-                    setState(() {});
+                  bool isEqual =
+                      element.controller!.getKey() == context.widget.key;
+                  if (isEqual) setState(() {});
                   return isEqual;
                 });
               }
@@ -156,29 +143,27 @@ class _YodaExampleState extends State<YodaExample> {
               effectPower: 10,
               gravity: 30,
               blurPower: 30,
-              randomness: 30
-          ),
+              randomness: 30),
           startWhenTapped: true,
           child: YodaCard(
             assetName: 'assets/dash3.png',
-          )
-      ),
+          )),
     );
 
     items.add(
       Yoda(
         yodaEffect: YodaEffect.Explosion,
-          controller: YodaController()
-            ..addStatusListener((status, context) {
-              if (status == AnimationStatus.completed) {
-                items.indexWhere((element) {
-                  bool isEqual = element.controller!.getKey() == context.widget.key;
-                  if (isEqual)
-                    element.controller!.reset();
-                  return isEqual;
-                });
-              }
-            }),
+        controller: YodaController()
+          ..addStatusListener((status, context) {
+            if (status == AnimationStatus.completed) {
+              items.indexWhere((element) {
+                bool isEqual =
+                    element.controller!.getKey() == context.widget.key;
+                if (isEqual) element.controller!.reset();
+                return isEqual;
+              });
+            }
+          }),
         duration: Duration(milliseconds: 1000),
         animParameters: AnimParameters(
             yodaBarrier: YodaBarrier(bottom: true),
@@ -188,12 +173,9 @@ class _YodaExampleState extends State<YodaExample> {
             effectPower: 0.1,
             gravity: 0.5,
             blurPower: 0,
-            randomness: 0
-        ),
+            randomness: 0),
         startWhenTapped: true,
-        child: YodaCard(
-            assetName: 'assets/dash.png'
-        ),
+        child: YodaCard(assetName: 'assets/dash.png'),
       ),
     );
 
@@ -204,9 +186,9 @@ class _YodaExampleState extends State<YodaExample> {
           ..addStatusListener((status, context) {
             if (status == AnimationStatus.completed) {
               items.indexWhere((element) {
-                bool isEqual = element.controller!.getKey() == context.widget.key;
-                if (isEqual)
-                  element.controller!.reset();
+                bool isEqual =
+                    element.controller!.getKey() == context.widget.key;
+                if (isEqual) element.controller!.reset();
                 return isEqual;
               });
             }
@@ -220,12 +202,9 @@ class _YodaExampleState extends State<YodaExample> {
             effectPower: 0,
             gravity: 2,
             blurPower: 0,
-            randomness: 80
-        ),
+            randomness: 80),
         startWhenTapped: true,
-        child: YodaCard(
-            assetName: 'assets/dash.png'
-        ),
+        child: YodaCard(assetName: 'assets/dash.png'),
       ),
     );
 
@@ -236,36 +215,29 @@ class _YodaExampleState extends State<YodaExample> {
             ..addStatusListener((status, context) {
               if (status == AnimationStatus.completed) {
                 items.indexWhere((element) {
-                  bool isEqual = element.controller!.getKey() == context.widget.key;
-                  if (isEqual)
-                    element.controller!.reset();
+                  bool isEqual =
+                      element.controller!.getKey() == context.widget.key;
+                  if (isEqual) element.controller!.reset();
                   return isEqual;
                 });
               }
             }),
           duration: Duration(milliseconds: 2500),
           animParameters: AnimParameters(
-              yodaBarrier: YodaBarrier(top: true, bottom: true, left: true, right: true),
+              yodaBarrier:
+                  YodaBarrier(top: true, bottom: true, left: true, right: true),
               fractionalCenter: Offset(0.5, 1.0),
               hTiles: 30,
               vTiles: 30,
               effectPower: 5,
               gravity: 0,
               blurPower: 0,
-              randomness: 10
-          ),
+              randomness: 10),
           startWhenTapped: true,
-          child: YodaCard(
-              assetName: 'assets/dash.png'
-          )
-      ),
+          child: YodaCard(assetName: 'assets/dash.png')),
     );
-
-
   }
 }
-
-
 
 class YodaCard extends StatelessWidget {
   final String assetName;
