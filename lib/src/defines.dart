@@ -28,10 +28,10 @@ class YodaBarrier {
   final bool bottom;
 
   const YodaBarrier({
-    this.left: false,
-    this.right: false,
-    this.top: false,
-    this.bottom: false,
+    this.left = false,
+    this.right = false,
+    this.top = false,
+    this.bottom = false,
   });
 }
 
@@ -61,14 +61,14 @@ class AnimParameters {
   int randomness;
 
   AnimParameters(
-      {this.yodaBarrier: const YodaBarrier(),
-      this.hTiles: 0,
-      this.vTiles: 0,
-      this.fractionalCenter: const Offset(0.5, 0.5),
-      this.gravity: 9.81,
-      this.effectPower: 1.0,
-      this.blurPower: 0.0,
-      this.randomness: 0});
+      {this.yodaBarrier = const YodaBarrier(),
+      this.hTiles = 0,
+      this.vTiles = 0,
+      this.fractionalCenter = const Offset(0.5, 0.5),
+      this.gravity = 9.81,
+      this.effectPower = 1.0,
+      this.blurPower = 0.0,
+      this.randomness = 0});
 }
 
 class AnimObject {
@@ -103,5 +103,5 @@ class AnimObject {
 
 class CapturedWidged {
   ByteData? byteData; // uncompressed 32bit RGBA image data
-  late Size size;
+  Size? size;
 }

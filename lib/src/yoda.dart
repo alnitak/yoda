@@ -75,10 +75,10 @@ class Yoda extends StatefulWidget {
   Yoda({
     required this.yodaEffect,
     this.controller,
-    this.duration: const Duration(milliseconds: 1000),
+    this.duration = const Duration(milliseconds: 1000),
     required this.child,
     this.animParameters,
-    this.startWhenTapped: false,
+    this.startWhenTapped = false,
   }) : super(key: UniqueKey()) {
     assert(
         !(yodaEffect == YodaEffect.Flakes &&
@@ -140,7 +140,7 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
     if (widget.animParameters != null)
       animObject.animParameters = widget.animParameters!;
 
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       catched = 0;
       _captureWidget(gk).then((_) {
         if (widget.animParameters != null) makeTiles();
@@ -202,8 +202,8 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
             ),
             if (controller.value > 0)
               SizedBox(
-                width: captured.size.width,
-                height: captured.size.height,
+                width: captured.size?.width ?? 0,
+                height: captured.size?.height ?? 0,
                 child: CustomPaint(
                   painter: painter,
                 ),
@@ -216,8 +216,10 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
 
   start() {
     animObject.center = Offset(
-        captured.size.width * animObject.animParameters.fractionalCenter.dx,
-        captured.size.height * animObject.animParameters.fractionalCenter.dy);
+        (captured.size?.width ?? 0) *
+            animObject.animParameters.fractionalCenter.dx,
+        (captured.size?.height ?? 0) *
+            animObject.animParameters.fractionalCenter.dy);
     _calcObjectParams();
     controller.forward(from: 0);
   }
@@ -236,16 +238,16 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
 
     try {
       RenderRepaintBoundary? boundary =
-          widgetKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
+          widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       if (catched > 15) // how many times to try? 150ms max (15*10ms)
         completer.complete(false);
 
-      image = await boundary.toImage();
+        image = await boundary.toImage();
 
-      captured.byteData =
-          await image.toByteData(format: ui.ImageByteFormat.rawRgba);
-      captured.size = Size(image.width.toDouble(), image.height.toDouble());
-
+        captured.byteData =
+            await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+        captured.size = Size(image.width.toDouble(), image.height.toDouble());
+      
       if (catched > 1) {
         completer.complete(true);
       } else {
@@ -305,12 +307,13 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
     animObject.angle.clear();
     animObject.velocity.clear();
     animObject.tileUiImages.clear();
-    int xStep = captured.size.width ~/ animObject.animParameters.hTiles;
-    int yStep = captured.size.height ~/ animObject.animParameters.vTiles;
+    int xStep = (captured.size?.width ?? 0) ~/ animObject.animParameters.hTiles;
+    int yStep =
+        (captured.size?.height ?? 0) ~/ animObject.animParameters.vTiles;
 
     int y1 = 0;
     int y2 = yStep;
-    while (y1 <= captured.size.height - yStep) {
+    while (y1 <= (captured.size?.height ?? 0) - yStep) {
       // TODO
       // if (y1+yStep>captured.size.height)
       //   y2 = captured.size.height.toInt();
@@ -319,7 +322,7 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
 
       int x1 = 0;
       int x2 = xStep;
-      while (x1 <= captured.size.width - xStep) {
+      while (x1 <= (captured.size?.width ?? 0) - xStep) {
         // TODO
         // if (x1+xStep>captured.size.height)
         //   x2 = captured.size.height.toInt();
@@ -345,7 +348,7 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
       tile[i] = header[i];
       data.setInt8(i, header[i]);
     }
-    int rowBytes = captured.size.width.toInt() * bytes;
+    int rowBytes = (captured.size?.width ?? 0).toInt() * bytes;
     for (int y = y1; y < y2; y++) {
       for (int x = x1 * bytes; x < x2 * bytes; x++) {
         tile[i] = captured.byteData!.getInt8(y * rowBytes + x);

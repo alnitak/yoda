@@ -1,11 +1,11 @@
 name: yoda
 description: Flutter widget that let you slice any kind of child widget in a matrix of tiles and animate them with different kind of ways. Currently with Explode, Vortex and Flakes.
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/alnitak/yoda
 issue_tracker: https://github.com/alnitak/yoda/issues
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: '>=3.1.2 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
