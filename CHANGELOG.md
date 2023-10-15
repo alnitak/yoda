@@ -1,5 +1,6 @@
 ## [1.0.2] - 15 Oct 2023
-fix some deps
+updated some deps
+fix capture widget
 
 ## [1.0.1] - 3 Feb 2023
 Updated Android compile version

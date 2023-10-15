@@ -9,7 +9,6 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:yoda/src/defines.dart';
 import 'package:yoda/src/yoda_explode.dart';
 import 'package:yoda/src/yoda_flakes.dart';
@@ -36,9 +35,9 @@ class YodaController {
   }
 
   /// exposed methods
-  void start() {
+  void start({Offset? center}) {
     assert(isAttached, "YodaController must be attached to a Yoda widget");
-    _yodaState?.start();
+    _yodaState?.start(center: center);
   }
 
   void reset() {
@@ -94,19 +93,19 @@ class Yoda extends StatefulWidget {
 }
 
 class _YodaState extends State<Yoda> with TickerProviderStateMixin {
-  YodaController? _yodaController;
+  YodaController? yodaController;
   late AnimationController controller;
-  late void Function(AnimationStatus) _statusListener;
-  late void Function() _listener;
+  // late void Function(AnimationStatus) statusListener;
+  // late void Function() listener;
   late GlobalKey gk;
   final Completer<bool> completer = Completer<bool>();
-  int catched = 0;
+  int retryCount = 0;
   CapturedWidged captured = CapturedWidged();
   AnimObject animObject = AnimObject();
   final int rgba32HeaderSize = 122;
 
-  _YodaState(this._yodaController) {
-    if (_yodaController != null) _yodaController?._addState(this);
+  _YodaState(this.yodaController) {
+    if (yodaController != null) yodaController?._addState(this);
   }
 
   @override
@@ -119,34 +118,28 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _statusListener = (AnimationStatus status) {
-      if (_yodaController != null &&
-          _yodaController!._yodaStatusListener != null) {
-        _yodaController!._yodaStatusListener!(status, context);
-      }
-    };
-    _listener = () {
-      setState(() {});
-    };
+    gk = GlobalKey();
 
     init();
   }
 
   init() {
     controller = AnimationController(vsync: this, duration: widget.duration)
-      ..addStatusListener(_statusListener)
-      ..addListener(_listener);
+      ..addStatusListener(statusListener)
+      ..addListener(listener);
 
     if (widget.animParameters != null)
       animObject.animParameters = widget.animParameters!;
+  }
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      catched = 0;
-      _captureWidget(gk).then((_) {
-        if (widget.animParameters != null) makeTiles();
-        // TODO: dispose captured.byteData ?
-      });
-    });
+  void listener() {
+    setState(() {});
+  }
+
+  void statusListener(AnimationStatus status) {
+    if (yodaController != null && yodaController!._yodaStatusListener != null) {
+      yodaController!._yodaStatusListener!(status, context);
+    }
   }
 
   // TODO: When changing Yoda widget parameters, 2 hot reloads are needed to make it to work!
@@ -155,16 +148,14 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
   void reassemble() {
     super.reassemble();
     controller.reset();
-    controller.removeStatusListener(_statusListener);
-    controller.removeListener(_listener);
+    controller.removeStatusListener(statusListener);
+    controller.removeListener(listener);
     controller.dispose();
     init();
   }
 
   @override
   Widget build(BuildContext context) {
-    gk = GlobalKey();
-
     CustomPainter? painter;
     if (widget.yodaEffect == YodaEffect.Explosion)
       painter = YodaExplode(
@@ -186,45 +177,66 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
       onTapDown: !widget.startWhenTapped
           ? null
           : (TapDownDetails details) {
-              // calculate distances and angle
-              animObject.center = details.localPosition;
-              _calcObjectParams();
-
-              controller.forward(from: 0);
+              start(center: details.localPosition);
             },
       child: RepaintBoundary(
         key: gk,
         child: Stack(
           children: [
             Opacity(
-              opacity: controller.value > 0 ? 0.0 : 1,
+              opacity: controller.value > 0 && captured.size != null ? 0.0 : 1,
               child: widget.child,
             ),
-            if (controller.value > 0)
-              SizedBox(
-                width: captured.size?.width ?? 0,
-                height: captured.size?.height ?? 0,
-                child: CustomPaint(
-                  painter: painter,
-                ),
-              )
+            if (controller.value > 0 && captured.size != null)
+              CustomPaint(
+                size: captured.size!,
+                painter: painter,
+              ),
           ],
         ),
       ),
     );
   }
 
-  start() {
-    animObject.center = Offset(
-        (captured.size?.width ?? 0) *
-            animObject.animParameters.fractionalCenter.dx,
-        (captured.size?.height ?? 0) *
-            animObject.animParameters.fractionalCenter.dy);
-    _calcObjectParams();
-    controller.forward(from: 0);
+  void start({Offset? center}) {
+    if (gk.currentContext == null) return;
+    if (controller.isAnimating) {
+      controller.reset();
+      controller.forward(from: 0);
+      return;
+    }
+
+    if (center == null) {
+      animObject.center = Offset(
+          (captured.size?.width ?? 0) *
+              animObject.animParameters.fractionalCenter.dx,
+          (captured.size?.height ?? 0) *
+              animObject.animParameters.fractionalCenter.dy);
+    } else {
+      animObject.center = center;
+    }
+
+    startCapture().then((value) {
+      if (value) {
+        calcObjectParams();
+        controller.forward(from: 0);
+      }
+    });
   }
 
-  reset() {
+  Future<bool> startCapture() async {
+    retryCount = 0;
+    captured.byteData = null;
+    captured.size = null;
+    var success = await captureWidget(gk);
+    print('$gk $success');
+    if (success && widget.animParameters != null) {
+      await makeTiles();
+    }
+    return success;
+  }
+
+  void reset() {
     controller.reset();
   }
 
@@ -233,22 +245,27 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
   }
 
   // TODO: find a better way to capture the widget
-  Future<bool> _captureWidget(GlobalKey widgetKey) async {
+  Future<bool> captureWidget(GlobalKey widgetKey) async {
     ui.Image? image;
 
     try {
-      RenderRepaintBoundary? boundary =
-          widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      if (catched > 15) // how many times to try? 150ms max (15*10ms)
-        completer.complete(false);
+      RenderRepaintBoundary? boundary = widgetKey.currentContext
+          ?.findRenderObject() as RenderRepaintBoundary?;
 
+      if (retryCount > 30) {
+        // how many times to try? 150ms max (15*10ms)
+        completer.complete(false);
+      }
+
+      if (boundary != null) {
         image = await boundary.toImage();
 
         captured.byteData =
             await image.toByteData(format: ui.ImageByteFormat.rawRgba);
         captured.size = Size(image.width.toDouble(), image.height.toDouble());
-      
-      if (catched > 1) {
+      }
+
+      if (image != null) {
         completer.complete(true);
       } else {
         // with a child like:
@@ -259,15 +276,15 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
         //   )
         // the first 2 boundary acquired are empty
         Timer(Duration(milliseconds: 20), () {
-          _captureWidget(widgetKey);
+          captureWidget(widgetKey);
         });
-        catched++;
+        retryCount++;
       }
     } catch (exception) {
-      catched++;
+      retryCount++;
       //Delay is required. See Issue https://github.com/flutter/flutter/issues/22308
       Timer(Duration(milliseconds: 20), () {
-        _captureWidget(widgetKey);
+        captureWidget(widgetKey);
       });
     }
     return completer.future;
@@ -275,7 +292,7 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
 
   // calculate object parameters based on the center of each tiles
   // and the center of the force
-  _calcObjectParams() {
+  void calcObjectParams() {
     double distance = 0;
     animObject.maxDistance = 0;
     animObject.angle.clear();
@@ -300,7 +317,7 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
     }
   }
 
-  makeTiles() {
+  Future<void> makeTiles() async {
     animObject.offset.clear();
     animObject.size.clear();
     animObject.distance.clear();
@@ -328,7 +345,7 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
         //   x2 = captured.size.height.toInt();
         // else
         x2 = x1 + xStep;
-        makeTile(x1, y1, x2, y2);
+        await makeTile(x1, y1, x2, y2);
         x1 += xStep;
       }
 
@@ -336,7 +353,7 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
     }
   }
 
-  makeTile(int x1, int y1, int x2, int y2) async {
+  Future<void> makeTile(int x1, int y1, int x2, int y2) async {
     int bytes = 4;
     Uint8List header = bmpHeader(x2 - x1, y2 - y1);
     Uint8List tile =
