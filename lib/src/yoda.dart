@@ -229,7 +229,6 @@ class _YodaState extends State<Yoda> with TickerProviderStateMixin {
     captured.byteData = null;
     captured.size = null;
     var success = await captureWidget(gk);
-    print('$gk $success');
     if (success && widget.animParameters != null) {
       await makeTiles();
     }
