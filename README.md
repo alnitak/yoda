@@ -1,6 +1,6 @@
 # Yoda Flutter plugin
 
-Flutter widget that let you slice any kind of child widget in a matrix of tiles and animate them with different kind of ways. Currently with Explode, Vortex and Flakes.
+Flutter widget that let's you slice any kind of child widget in a matrix of tiles and animate them with different kind of ways. Currently with Explode, Vortex and Flakes.
 Works on all platforms.
 
 ![Screenshot](https://github.com/alnitak/yoda/blob/master/img/yoda.gif?raw=true "yoda Demo")
@@ -41,7 +41,7 @@ Works on all platforms.
 
 If you need to control the animation status:
 ```dart
-YodaController _yodaControllerExplode;
+late YodaController _yodaControllerExplode;
   
 @override
   void initState() {
@@ -54,7 +54,8 @@ YodaController _yodaControllerExplode;
     });
   }
 ```
-YodaController accept start() and reset() methods.
+YodaController accepts start() and reset() methods. 
+Note: calling those methods will not work when a setState() is called at the same time.
 
 
 ```dart
